@@ -15,20 +15,18 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ParkingLot {
+public class ParkingManager {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private long lotsRemain;
-
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parkingBoy_id")
-    private ParkingBoy parkingBoy;
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JoinColumn(name = "parkingLot_id")
+    List<ParkingBoy> parkingBoys = new ArrayList<>();
 
     @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "car_id")
-    List<Car> cars = new ArrayList<>();
+    @JoinColumn(name = "parkingLot_id")
+    List<ParkingLot> parkingLots = new ArrayList<>();
 }

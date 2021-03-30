@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = ParkingLotApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ParkingLotApiTest {
+public class ParkingBoyApiTest {
     @LocalServerPort
     private int port;
 

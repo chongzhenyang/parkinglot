@@ -18,7 +18,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class ApplicationService {
+public class ParkingBoyService {
 
     private final ParkingLotRepository parkingLotRepository;
 
