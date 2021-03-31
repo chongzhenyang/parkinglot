@@ -22,11 +22,11 @@ public class ParkingManager {
 
     private String name;
 
-    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "parkingLot_id")
+    @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "parkingManager_id")
     List<ParkingBoy> parkingBoys = new ArrayList<>();
 
-    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "parkingLot_id")
+    @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "parkingManager_id")
     List<ParkingLot> parkingLots = new ArrayList<>();
 }

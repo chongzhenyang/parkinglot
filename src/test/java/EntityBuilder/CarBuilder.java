@@ -48,7 +48,6 @@ public class CarBuilder {
                 .brand(brand)
                 .model(model)
                 .licencePlate(licencePlate)
-                .parkingLot(parkingLot)
                 .build();
     }
 }

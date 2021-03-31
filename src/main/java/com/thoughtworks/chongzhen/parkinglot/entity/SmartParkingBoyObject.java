@@ -37,6 +37,7 @@ public class SmartParkingBoyObject implements ParkingBoyObject {
 
         // todo:
         selectedParkingLot.getCars().add(car);
+        selectedParkingLot.setLotsRemain(selectedParkingLot.getLotsRemain() - 1);
         this.setPreviousVisitedLot(selectedParkingLot.getId());
 
         String plateNumberEncoded = Base64.getEncoder()

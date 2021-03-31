@@ -24,11 +24,7 @@ public class ParkingLot {
 
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parkingBoy_id")
-    private ParkingBoy parkingBoy;
-
-    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "car_id")
+    @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "parkingLot_id")
     List<Car> cars = new ArrayList<>();
 }

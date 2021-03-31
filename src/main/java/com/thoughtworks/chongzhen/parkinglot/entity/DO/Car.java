@@ -23,8 +23,4 @@ public class Car {
     private String model;
 
     private String licencePlate;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parkingLot_id")
-    private ParkingLot parkingLot;
 }

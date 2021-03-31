@@ -1,8 +1,9 @@
 package com.thoughtworks.chongzhen.parkinglot.api;
 
+import com.thoughtworks.chongzhen.parkinglot.entity.DO.Car;
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingBoy;
-import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingLot;
-import com.thoughtworks.chongzhen.parkinglot.service.ParkingBoyService;
+import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingManager;
+import com.thoughtworks.chongzhen.parkinglot.entity.TicketObject;
 import com.thoughtworks.chongzhen.parkinglot.service.ParkingManagerService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,41 +15,57 @@ import java.util.List;
 @RequestMapping("/parkingManagers")
 @AllArgsConstructor
 public class ParkingManagerApi {
-    private final ParkingBoyService parkingBoyService;
     private final ParkingManagerService parkingManagerService;
 
-    @PostMapping("/parkingBoys")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ParkingBoy createParkingBoy(@RequestBody ParkingBoy parkingBoy) {
-        return parkingBoyService.createParkingBoy(parkingBoy);
+    public ParkingManager createParkingManager(@RequestBody ParkingManager parkingManager) {
+        return parkingManagerService.createParkingManager(parkingManager);
     }
 
-    @DeleteMapping("/parkingBoys/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public ParkingBoy deleteParkingBoy(@PathVariable("id") long id){
-        return parkingManagerService.deleteParkingBoy(id);
+    @PostMapping("/{id}/parkingBoys")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ParkingManager createParkingBoy(@PathVariable("id") long managerId ,@RequestBody ParkingBoy parkingBoy) {
+        return parkingManagerService.createParkingBoy(managerId, parkingBoy);
     }
 
-    @PostMapping("/parkingBoys/{id}")
+    @PostMapping("/parkingLots")
+    public ParkingManager createParkingLot(@RequestParam("capacity") long capacity,
+                                           @RequestParam("managerId") long id,
+                                           @RequestParam("parkingBoyName") String boyName,
+                                           @RequestParam("lotName") String lotName) {
+        return parkingManagerService.createParkingLot(capacity, id, boyName, lotName);
+    }
+
+    @DeleteMapping("/parkingBoys")
     @ResponseStatus(HttpStatus.OK)
-    public ParkingBoy createLot(@PathVariable("id") long id) {
-        return parkingBoyService.createParkingLot(500, id);
+    public ParkingManager deleteParkingBoy(@RequestParam("managerId") long id,
+                                       @RequestParam("boyName") String boyName) {
+        return parkingManagerService.deleteParkingBoy(id, boyName);
     }
 
     @DeleteMapping("/parkingLots")
-    public ParkingLot deleteLot(@RequestParam(value = "id", required = false) long id,
-                                @RequestParam(value = "name", required = false) String name){
+    public ParkingManager deleteLot(@RequestParam("managerId") long managerId,
+                                @RequestParam("boyName") String boyName,
+                                @RequestParam("lotName") String lotName) {
+        return parkingManagerService.deleteParkingLot(managerId, boyName, lotName);
+    }
+
+    @PostMapping("/{id}/park")
+    @ResponseStatus(HttpStatus.OK)
+    public TicketObject park(@PathVariable("id") long id, @RequestBody Car car){
+        return parkingManagerService.park(car, id);
+    }
+
+    @PostMapping("/pickUp")
+    @ResponseStatus(HttpStatus.OK)
+    public Car pickUp(@RequestBody TicketObject ticketObject){
         return null;
     }
 
-    @GetMapping("/parkingLots")
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<ParkingLot> showParkingLot() {
-        return parkingBoyService.getAllParkingLot();
-    }
-
-    @GetMapping("/parkingBoys")
-    public List<ParkingBoy> showParkingBoy() {
-        return parkingBoyService.getAllParkingBoy();
+    public List<ParkingManager> show() {
+        return parkingManagerService.getAll();
     }
 }

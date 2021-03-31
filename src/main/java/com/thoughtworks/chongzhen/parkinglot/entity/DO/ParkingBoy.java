@@ -27,7 +27,7 @@ public class ParkingBoy {
 
     private long previousVisitedLot;
 
-    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-    @JoinColumn(name = "parkingLot_id")
+    @OneToMany(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "parkingBoy_id")
     List<ParkingLot> parkingLots = new ArrayList<>();
 }

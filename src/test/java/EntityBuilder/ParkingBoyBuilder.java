@@ -16,7 +16,7 @@ public class ParkingBoyBuilder {
     private List<ParkingLot> parkingLots;
 
     public static ParkingBoyBuilder withDefault() {
-        return new ParkingBoyBuilder(1, "chongzhen", true, 0, Collections.EMPTY_LIST);
+        return new ParkingBoyBuilder(1, "zuowen", true, 0, Collections.EMPTY_LIST);
     }
 
     public ParkingBoyBuilder withId(long id) {
