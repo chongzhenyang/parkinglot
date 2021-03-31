@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 public interface ParkingLotRepository extends JpaRepository<ParkingLot, Long> {
     ParkingLot findParkingLotByName(String name);
 
+    void deleteParkingLotByName(String name);
+
     @Query(nativeQuery=true, value="SELECT * FROM parking_lot ORDER BY rand() LIMIT 1")
     ParkingLot findRandomParkingLot();
 }

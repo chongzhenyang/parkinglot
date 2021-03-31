@@ -4,6 +4,7 @@ import com.thoughtworks.chongzhen.parkinglot.entity.DO.Car;
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingBoy;
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingManager;
 import com.thoughtworks.chongzhen.parkinglot.entity.TicketObject;
+import com.thoughtworks.chongzhen.parkinglot.exceptionHanding.exceptions.InvalidTicketException;
 import com.thoughtworks.chongzhen.parkinglot.service.ParkingManagerService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,7 +26,7 @@ public class ParkingManagerApi {
 
     @PostMapping("/{id}/parkingBoys")
     @ResponseStatus(HttpStatus.CREATED)
-    public ParkingManager createParkingBoy(@PathVariable("id") long managerId ,@RequestBody ParkingBoy parkingBoy) {
+    public ParkingManager createParkingBoy(@PathVariable("id") long managerId, @RequestBody ParkingBoy parkingBoy) {
         return parkingManagerService.createParkingBoy(managerId, parkingBoy);
     }
 
@@ -40,27 +41,30 @@ public class ParkingManagerApi {
     @DeleteMapping("/parkingBoys")
     @ResponseStatus(HttpStatus.OK)
     public ParkingManager deleteParkingBoy(@RequestParam("managerId") long id,
-                                       @RequestParam("boyName") String boyName) {
+                                           @RequestParam("boyName") String boyName) {
         return parkingManagerService.deleteParkingBoy(id, boyName);
     }
 
     @DeleteMapping("/parkingLots")
     public ParkingManager deleteLot(@RequestParam("managerId") long managerId,
-                                @RequestParam("boyName") String boyName,
-                                @RequestParam("lotName") String lotName) {
+                                    @RequestParam("boyName") String boyName,
+                                    @RequestParam("lotName") String lotName) {
         return parkingManagerService.deleteParkingLot(managerId, boyName, lotName);
     }
 
     @PostMapping("/{id}/park")
     @ResponseStatus(HttpStatus.OK)
-    public TicketObject park(@PathVariable("id") long id, @RequestBody Car car){
+    public TicketObject park(@PathVariable("id") long id, @RequestBody Car car) {
         return parkingManagerService.park(car, id);
     }
 
     @PostMapping("/pickUp")
     @ResponseStatus(HttpStatus.OK)
-    public Car pickUp(@RequestBody TicketObject ticketObject){
-        return null;
+    public Car pickUp(@RequestBody TicketObject ticketObject) {
+        if (!ticketObject.isParkedByManager()) {
+            throw new InvalidTicketException(400, "invalid ticket", "car was parked by parking boy");
+        }
+        return parkingManagerService.pickUp(ticketObject);
     }
 
     @GetMapping

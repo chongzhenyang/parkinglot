@@ -1,6 +1,7 @@
 package EntityBuilder;
 
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingBoy;
+import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingLot;
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingManager;
 import com.thoughtworks.chongzhen.parkinglot.entity.TicketObject;
 import lombok.AllArgsConstructor;
@@ -16,8 +17,10 @@ public class ParkingManagerBuilder {
 
     List<ParkingBoy> parkingBoys;
 
+    List<ParkingLot> parkingLots;
+
     public static ParkingManagerBuilder withDefault() {
-        return new ParkingManagerBuilder(1, "chongzhen", new ArrayList<ParkingBoy>());
+        return new ParkingManagerBuilder(1, "chongzhen", new ArrayList<ParkingBoy>(), new ArrayList<ParkingLot>());
     }
 
     public ParkingManagerBuilder withId(long id) {
@@ -35,11 +38,17 @@ public class ParkingManagerBuilder {
         return this;
     }
 
+    public ParkingManagerBuilder withParkingLots(List<ParkingLot> parkingLots) {
+        this.parkingLots = parkingLots;
+        return this;
+    }
+
     public ParkingManager build() {
         return ParkingManager.builder()
                 .id(id)
                 .name(name)
                 .parkingBoys(parkingBoys)
+                .parkingLots(parkingLots)
                 .build();
     }
 }

@@ -10,4 +10,5 @@ public class TicketObject {
     private long parkingBoyId;
     private long parkingLotId;
     private String ticketNumber;
+    private boolean isParkedByManager;
 }

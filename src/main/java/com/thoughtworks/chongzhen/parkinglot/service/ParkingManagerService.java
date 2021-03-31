@@ -47,7 +47,6 @@ public class ParkingManagerService {
         ParkingLot parkingLot = parkingLotRepository.findParkingLotByName(parkingLotName);
         saveFindLotsByBoyName(parkingManager, boyName).remove(parkingLot);
         parkingManager.getParkingLots().remove(parkingLot);
-
         return parkingManagerRepository.save(parkingManager);
     }
 
@@ -69,7 +68,6 @@ public class ParkingManagerService {
         return parkingManagerRepository.save(parkingManager);
     }
 
-    //TODO: DDD should be inside parkingManager object
     public TicketObject park(Car car, long managerId) {
         ParkingManagerObject parkingManagerObject = parkingManagerObjectRepository.findParkingManagerObjectById(managerId);
         TicketObject ticketObject = parkingManagerObject.park(car);
@@ -77,9 +75,12 @@ public class ParkingManagerService {
         return ticketObject;
     }
 
-    //TODO: DDD should be inside parkingManager object
-    public Car pickUp(TicketObject ticketObject){
-        return null;
+    public Car pickUp(TicketObject ticketObject) {
+        ParkingManagerObject parkingManagerObject = parkingManagerObjectRepository.findParkingManagerObjectById(ticketObject.getParkingBoyId());
+        Car foundCar = parkingManagerObject.pickUp(ticketObject);
+        parkingManagerObjectRepository.save(parkingManagerObject);
+
+        return foundCar;
     }
 
     //TODO: DDD should be inside parkingManager object

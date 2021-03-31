@@ -4,6 +4,7 @@ import com.thoughtworks.chongzhen.parkinglot.entity.DO.Car;
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingLot;
 import lombok.AllArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class ParkingLotBuilder {
     List<Car> cars;
 
     public static ParkingLotBuilder withDefault() {
-        return new ParkingLotBuilder(1, 500, "first", Collections.emptyList());
+        return new ParkingLotBuilder(0, 500, "firstLot", null);
     }
 
     public ParkingLotBuilder withId(long id) {

@@ -23,4 +23,6 @@ public class Ticket {
     private long parkingLotId;
 
     private String ticketNumber;
+
+    private boolean isParkedByManager = false;
 }
