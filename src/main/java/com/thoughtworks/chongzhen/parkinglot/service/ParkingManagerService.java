@@ -40,11 +40,14 @@ public class ParkingManagerService {
         return parkingManagerRepository.save(parkingManager);
     }
 
-    //TODO: should check if any cars parked inside the parking lot
     //TODO: DDD should be inside parkingManager object
     public ParkingManager deleteParkingLot(long managerId, String boyName, String parkingLotName) {
         ParkingManager parkingManager = saveFindManagerById(managerId);
-        ParkingLot parkingLot = parkingLotRepository.findParkingLotByName(parkingLotName);
+        ParkingLot parkingLot = parkingLotRepository.findParkingLotByName(parkingLotName)
+                .filter(lot -> lot.getLotsRemain() != 500)
+                .orElseThrow(() -> {
+                    throw new RuntimeException("cannot delete this parking lot");
+                });
         saveFindLotsByBoyName(parkingManager, boyName).remove(parkingLot);
         parkingManager.getParkingLots().remove(parkingLot);
         return parkingManagerRepository.save(parkingManager);
@@ -57,13 +60,12 @@ public class ParkingManagerService {
         parkingManager.getParkingBoys().add(parkingBoy);
         return parkingManagerRepository.save(parkingManager);
     }
-
-    //TODO: should check if any cars managed by this parking boy
+    
     //TODO: DDD should be inside parkingManager object
     public ParkingManager deleteParkingBoy(long manageId, String boyName) {
         ParkingManager parkingManager = saveFindManagerById(manageId);
         List<ParkingBoy> parkingBoys = parkingManager.getParkingBoys().stream()
-                .filter(parkingBoy -> !parkingBoy.getName().equals(boyName)).collect(Collectors.toList());
+                .filter(parkingBoy -> !validateParkingBoy(parkingBoy, boyName)).collect(Collectors.toList());
         parkingManager.setParkingBoys(parkingBoys);
         return parkingManagerRepository.save(parkingManager);
     }
@@ -97,5 +99,9 @@ public class ParkingManagerService {
                     throw new ParkingBoyNotFoundException(404, "invalid name", "cannot find parking boy with name" + boyName);
                 })
                 .getParkingLots();
+    }
+
+    private boolean validateParkingBoy(ParkingBoy parkingBoy, String boyName){
+        return parkingBoy.getName().equals(boyName) && parkingBoy.getParkingLots().size() == 0;
     }
 }

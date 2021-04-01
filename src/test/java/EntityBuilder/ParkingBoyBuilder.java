@@ -5,7 +5,6 @@ import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingLot;
 import lombok.AllArgsConstructor;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @AllArgsConstructor

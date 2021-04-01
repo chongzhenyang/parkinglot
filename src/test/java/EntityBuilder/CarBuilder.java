@@ -1,8 +1,6 @@
 package EntityBuilder;
 
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.Car;
-import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingLot;
-import com.thoughtworks.chongzhen.parkinglot.entity.TicketObject;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

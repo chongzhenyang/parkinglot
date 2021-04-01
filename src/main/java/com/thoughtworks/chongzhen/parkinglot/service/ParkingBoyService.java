@@ -22,9 +22,6 @@ public class ParkingBoyService {
     public TicketObject parkCar(Car car) {
         ParkingBoyObject parkingBoyObject = parkingBoyObjectRepository.findRandomParkingBoyObject();
         TicketObject ticketObject = parkingBoyObject.park(car);
-//        ticket = Ticket.create(parkingBoyObject.id, car.getId(),...)
-//        ticketRepo.save(ticket)
-//        return ticket;
         parkingBoyObjectRepository.save(parkingBoyObject);
 
         return ticketObject;

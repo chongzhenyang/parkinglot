@@ -5,28 +5,21 @@ import com.thoughtworks.chongzhen.parkinglot.entity.DTO.JwtResponse;
 import com.thoughtworks.chongzhen.parkinglot.Jwt.JwtTokenUtil;
 import com.thoughtworks.chongzhen.parkinglot.Jwt.JwtUserDetailsService;
 import com.thoughtworks.chongzhen.parkinglot.exceptionHanding.exceptions.InvalidUsernameAndPasswordException;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
 @RequestMapping("/authenticate")
+@AllArgsConstructor
 public class JwtAuthenticationController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final JwtTokenUtil jwtTokenUtil;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final JwtUserDetailsService userDetailsService;
 
-    @Autowired
-    private JwtUserDetailsService userDetailsService;
-
-    /**
-     * 获取 客户端来的 username password 使用秘钥加密成 json web token
-     * */
     @PostMapping
     public JwtResponse createAuthenticationToken(@RequestBody JwtRequest authenticationRequest){
 

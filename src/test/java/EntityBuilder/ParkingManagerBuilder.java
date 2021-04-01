@@ -3,7 +3,6 @@ package EntityBuilder;
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingBoy;
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingLot;
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingManager;
-import com.thoughtworks.chongzhen.parkinglot.entity.TicketObject;
 import lombok.AllArgsConstructor;
 
 import java.util.ArrayList;

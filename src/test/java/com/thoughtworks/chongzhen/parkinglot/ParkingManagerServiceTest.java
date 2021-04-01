@@ -5,11 +5,8 @@ import com.thoughtworks.chongzhen.parkinglot.entity.DO.Car;
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingBoy;
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingLot;
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingManager;
-import com.thoughtworks.chongzhen.parkinglot.entity.ParkingBoyFactory;
-import com.thoughtworks.chongzhen.parkinglot.entity.ParkingBoyObject;
 import com.thoughtworks.chongzhen.parkinglot.entity.ParkingManagerObject;
 import com.thoughtworks.chongzhen.parkinglot.entity.TicketObject;
-import com.thoughtworks.chongzhen.parkinglot.exceptionHanding.exceptions.ParkingManagerNotFoundException;
 import com.thoughtworks.chongzhen.parkinglot.repository.*;
 import com.thoughtworks.chongzhen.parkinglot.service.ParkingManagerService;
 import org.junit.jupiter.api.BeforeEach;
@@ -82,7 +79,7 @@ public class ParkingManagerServiceTest {
     @Test
     public void should_delete_parking_lot_successful(){
         ParkingManager parkingManager = ParkingManagerBuilder.withDefault().build();
-        ParkingLot parkingLot = ParkingLotBuilder.withDefault().build();
+        Optional<ParkingLot> parkingLot = Optional.of(ParkingLotBuilder.withDefault().build());
         ParkingBoy parkingBoy = ParkingBoyBuilder.withDefault().withParkingLots(new ArrayList<ParkingLot>()).build();
         List<ParkingBoy> parkingBoyList = new ArrayList<>();
         parkingBoyList.add(parkingBoy);
