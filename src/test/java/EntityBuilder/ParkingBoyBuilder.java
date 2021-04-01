@@ -17,7 +17,10 @@ public class ParkingBoyBuilder {
     private List<ParkingLot> parkingLots;
 
     public static ParkingBoyBuilder withDefault() {
-        return new ParkingBoyBuilder(1, "zuowen", true, 0, new ArrayList<ParkingLot>());
+        List<ParkingLot> parkingLotList = new ArrayList<>();
+        ParkingLot parkingLot = ParkingLotBuilder.withDefault().build();
+        parkingLotList.add(parkingLot);
+        return new ParkingBoyBuilder(4, "zuowen", false, 5, parkingLotList);
     }
 
     public ParkingBoyBuilder withId(long id) {

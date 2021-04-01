@@ -20,7 +20,14 @@ public class ParkingManagerBuilder {
     List<ParkingLot> parkingLots;
 
     public static ParkingManagerBuilder withDefault() {
-        return new ParkingManagerBuilder(1, "chongzhen", new ArrayList<ParkingBoy>(), new ArrayList<ParkingLot>());
+        List<ParkingBoy> parkingBoyList = new ArrayList<>();
+        ParkingBoy parkingBoy = ParkingBoyBuilder.withDefault().build();
+        parkingBoyList.add(parkingBoy);
+
+        List<ParkingLot> parkingLotList = new ArrayList<>();
+        ParkingLot parkingLot = ParkingLotBuilder.withDefault().build();
+        parkingLotList.add(parkingLot);
+        return new ParkingManagerBuilder(1, "chongzhen", parkingBoyList, parkingLotList);
     }
 
     public ParkingManagerBuilder withId(long id) {

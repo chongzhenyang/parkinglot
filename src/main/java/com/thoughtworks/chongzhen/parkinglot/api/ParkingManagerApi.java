@@ -1,5 +1,6 @@
 package com.thoughtworks.chongzhen.parkinglot.api;
 
+import com.thoughtworks.chongzhen.parkinglot.Jwt.JwtTokenUtil;
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.Car;
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingBoy;
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingManager;
@@ -17,10 +18,13 @@ import java.util.List;
 @AllArgsConstructor
 public class ParkingManagerApi {
     private final ParkingManagerService parkingManagerService;
+    private final JwtTokenUtil jwtTokenUtil;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ParkingManager createParkingManager(@RequestBody ParkingManager parkingManager) {
+    public ParkingManager createParkingManager(@RequestHeader("Authorization") String token) {
+        String username = getUsernameFromToken(token);
+        ParkingManager parkingManager = ParkingManager.builder().name(username).build();
         return parkingManagerService.createParkingManager(parkingManager);
     }
 
@@ -71,5 +75,9 @@ public class ParkingManagerApi {
     @ResponseStatus(HttpStatus.OK)
     public List<ParkingManager> show() {
         return parkingManagerService.getAll();
+    }
+
+    private String getUsernameFromToken(String token){
+        return jwtTokenUtil.getUsernameFromToken(token.substring(7));
     }
 }

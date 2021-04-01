@@ -11,10 +11,9 @@ public class CarBuilder {
     private String brand;
     private String model;
     private String licencePlate;
-    private ParkingLot parkingLot;
 
     public static CarBuilder withDefault() {
-        return new CarBuilder(1, "BMW", "540i", "川A5S11A", null);
+        return new CarBuilder(1, "BMW", "540i", "川A5S11A");
     }
 
     public CarBuilder withId(long id) {
@@ -34,11 +33,6 @@ public class CarBuilder {
 
     public CarBuilder withLicencePlate(String licencePlate) {
         this.licencePlate = licencePlate;
-        return this;
-    }
-
-    public CarBuilder withParkingLot(ParkingLot parkingLot) {
-        this.parkingLot = parkingLot;
         return this;
     }
 

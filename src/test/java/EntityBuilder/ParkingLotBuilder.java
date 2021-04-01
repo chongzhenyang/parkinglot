@@ -19,7 +19,10 @@ public class ParkingLotBuilder {
     List<Car> cars;
 
     public static ParkingLotBuilder withDefault() {
-        return new ParkingLotBuilder(0, 500, "firstLot", null);
+        List<Car> carList = new ArrayList<>();
+        Car car = CarBuilder.withDefault().build();
+        carList.add(car);
+        return new ParkingLotBuilder(5, 499, "firstLot", carList);
     }
 
     public ParkingLotBuilder withId(long id) {
