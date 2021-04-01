@@ -77,22 +77,41 @@ public class ParkingManagerServiceTest {
 
     @Test
     public void should_delete_parking_lot_successful(){
+        List<ParkingBoy> parkingBoyList = new ArrayList<>();
+        List<ParkingLot> parkingLotList = new ArrayList<>();
         ParkingLot parkingLot = ParkingLotBuilder.withDefault().withName("zone3").build();
-        ParkingBoy parkingBoy = ParkingBoyBuilder.withDefault().withParkingLots(Arrays.asList(parkingLot)).build();
+        parkingLotList.add(parkingLot);
+        ParkingBoy parkingBoy = ParkingBoyBuilder.withDefault().withParkingLots(parkingLotList).build();
+        parkingBoyList.add(parkingBoy);
         ParkingManager parkingManager = ParkingManagerBuilder.withDefault()
-                .withParkingBoys(Arrays.asList(parkingBoy))
-                .withParkingLots(Arrays.asList(parkingLot))
+                .withParkingBoys(parkingBoyList)
+                .withParkingLots(parkingLotList)
                 .build();
+        ParkingBoy expectedParkingBoy = ParkingBoyBuilder.withDefault().build();
+        List<ParkingBoy> expectedParkingBoyList = new ArrayList<>();
+        expectedParkingBoyList.add(expectedParkingBoy);
+        ParkingManager expectedParkingManager = ParkingManagerBuilder.withDefault().withParkingBoys(expectedParkingBoyList).build();
 
         when(parkingManagerRepository.findById(1L)).thenReturn(Optional.of(parkingManager));
         when(parkingLotRepository.findParkingLotByName("zone3")).thenReturn(parkingLot);
-
-        ParkingBoy expectedParkingBoy = ParkingBoyBuilder.withDefault().build();
-        ParkingManager expectedParkingManager = ParkingManagerBuilder.withDefault().withParkingBoys(Arrays.asList(parkingBoy)).build();
         when(parkingManagerRepository.save(expectedParkingManager)).thenReturn(expectedParkingManager);
 
         ParkingManager foundParkingManager = parkingManagerService.deleteParkingLot(1L, "zuowen", "zone3");
-        assertThat(foundParkingManager).isEqualTo(expectedParkingBoy);
+        assertThat(foundParkingManager).isEqualTo(expectedParkingManager);
+    }
+
+    @Test
+    public void should_create_parking_boy_successful(){
+        ParkingBoy parkingBoy = ParkingBoyBuilder.withDefault().build();
+        List<ParkingBoy> parkingBoyList = new ArrayList<>();
+        parkingBoyList.add(parkingBoy);
+        ParkingManager parkingManager = ParkingManagerBuilder.withDefault().build();
+        ParkingManager expectedParkingManager = ParkingManagerBuilder.withDefault().withParkingBoys(parkingBoyList).build();
+        when(parkingManagerRepository.findById(1L)).thenReturn(Optional.of(parkingManager));
+        when(parkingManagerRepository.save(expectedParkingManager)).thenReturn(expectedParkingManager);
+
+        ParkingManager foundParkingManager = parkingManagerService.createParkingBoy(1L, parkingBoy);
+        assertThat(foundParkingManager).isEqualTo(expectedParkingManager);
     }
 
 //    @Test
