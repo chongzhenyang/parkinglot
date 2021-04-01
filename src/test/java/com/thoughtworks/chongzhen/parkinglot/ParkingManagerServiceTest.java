@@ -107,12 +107,30 @@ public class ParkingManagerServiceTest {
         parkingBoyList.add(parkingBoy);
         ParkingManager parkingManager = ParkingManagerBuilder.withDefault().build();
         ParkingManager expectedParkingManager = ParkingManagerBuilder.withDefault().withParkingBoys(parkingBoyList).build();
+
         when(parkingManagerRepository.findById(1L)).thenReturn(Optional.of(parkingManager));
         when(parkingManagerRepository.save(expectedParkingManager)).thenReturn(expectedParkingManager);
 
         ParkingManager foundParkingManager = parkingManagerService.createParkingBoy(1L, parkingBoy);
         assertThat(foundParkingManager).isEqualTo(expectedParkingManager);
     }
+
+    @Test
+    public void should_delete_parking_boy_successful(){
+        ParkingBoy parkingBoy = ParkingBoyBuilder.withDefault().build();
+        List<ParkingBoy> parkingBoyList = new ArrayList<>();
+        parkingBoyList.add(parkingBoy);
+        ParkingManager parkingManager = ParkingManagerBuilder.withDefault().withParkingBoys(parkingBoyList).build();
+        ParkingManager expectedParkingManager = ParkingManagerBuilder.withDefault().build();
+
+        when(parkingManagerRepository.findById(1L)).thenReturn(Optional.of(parkingManager));
+        when(parkingManagerRepository.save(expectedParkingManager)).thenReturn(expectedParkingManager);
+
+        ParkingManager foundParkingManager = parkingManagerService.deleteParkingBoy(1L, "zuowen");
+        assertThat(foundParkingManager).isEqualTo(expectedParkingManager);
+    }
+
+
 
 //    @Test
 //    public void should_throw_exception_when_create_parking_lot_given_invalid_manager_id(){
@@ -122,20 +140,5 @@ public class ParkingManagerServiceTest {
 //    @Test
 //    public void should_throw_exception_when_create_parking_lot_given_invalid_parking_boy_name(){
 //
-//    }
-
-
-    //TODO: changed
-//    @Test
-//    public void should_delete_parking_boy_successful() {
-//        //given
-//        TicketObject ticketObject = TicketObjectBuilder.withDefault().build();
-//        ParkingBoy parkingBoy = ParkingBoyBuilder.withDefault().build();
-//        ParkingBoyObject parkingBoyObject = new ParkingBoyFactory().getParkingBoy(parkingBoy);
-//        //when
-//        when(parkingBoyObjectRepository.findParkingBoyObjectByTicket(ticketObject)).thenReturn(parkingBoyObject);
-//        //then
-//        ParkingManager parkingManager = parkingManagerService.deleteParkingBoy(1, "zuowen");
-//        assertThat(parkingBoy).isEqualTo(parkingManager);
 //    }
 }
