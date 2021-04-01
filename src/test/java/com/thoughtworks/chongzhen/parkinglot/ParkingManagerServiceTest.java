@@ -108,15 +108,14 @@ public class ParkingManagerServiceTest {
     }
 
     @Test
-    public void should_delete_parking_boy_successful(){
+    public void should_not_delete_when_deleting_parking_boy_given_parking_boy_non_empty(){
         ParkingManager parkingManager = ParkingManagerBuilder.withDefault().build();
-        ParkingManager expectedParkingManager = ParkingManagerBuilder.withDefault().withParkingBoys(new ArrayList<ParkingBoy>()).build();
 
         when(parkingManagerRepository.findById(1L)).thenReturn(Optional.of(parkingManager));
-        when(parkingManagerRepository.save(expectedParkingManager)).thenReturn(expectedParkingManager);
+        when(parkingManagerRepository.save(parkingManager)).thenReturn(parkingManager);
 
         ParkingManager foundParkingManager = parkingManagerService.deleteParkingBoy(1L, "zuowen");
-        assertThat(foundParkingManager).isEqualTo(expectedParkingManager);
+        assertThat(foundParkingManager).isEqualTo(parkingManager);
     }
 
     @Test
@@ -157,16 +156,4 @@ public class ParkingManagerServiceTest {
         Car foundCar = parkingManagerService.pickUp(ticketObject);
         assertThat(foundCar).isEqualTo(car);
     }
-
-
-
-//    @Test
-//    public void should_throw_exception_when_create_parking_lot_given_invalid_manager_id(){
-//
-//    }
-//
-//    @Test
-//    public void should_throw_exception_when_create_parking_lot_given_invalid_parking_boy_name(){
-//
-//    }
 }

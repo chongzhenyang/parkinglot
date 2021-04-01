@@ -60,7 +60,7 @@ public class ParkingManagerService {
         parkingManager.getParkingBoys().add(parkingBoy);
         return parkingManagerRepository.save(parkingManager);
     }
-    
+
     //TODO: DDD should be inside parkingManager object
     public ParkingManager deleteParkingBoy(long manageId, String boyName) {
         ParkingManager parkingManager = saveFindManagerById(manageId);
@@ -101,7 +101,11 @@ public class ParkingManagerService {
                 .getParkingLots();
     }
 
-    private boolean validateParkingBoy(ParkingBoy parkingBoy, String boyName){
+    private boolean validateParkingBoy(ParkingBoy parkingBoy, String boyName) {
+        boolean isEmpty = parkingBoy.getName().equals(boyName) && parkingBoy.getParkingLots().size() == 0;
+        if (isEmpty) {
+            throw new RuntimeException("cannot delete parking boy when it is not empty");
+        }
         return parkingBoy.getName().equals(boyName) && parkingBoy.getParkingLots().size() == 0;
     }
 }
