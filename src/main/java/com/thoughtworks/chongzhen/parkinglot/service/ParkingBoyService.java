@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 @Service
 @AllArgsConstructor
@@ -21,10 +23,12 @@ public class ParkingBoyService {
     @Transactional
     public TicketObject parkCar(Car car) {
         ParkingBoyObject parkingBoyObject = parkingBoyObjectRepository.findRandomParkingBoyObject();
-        TicketObject ticketObject = parkingBoyObject.park(car);
+        long[] longArgs = parkingBoyObject.park(car);
         parkingBoyObjectRepository.save(parkingBoyObject);
 
-        return ticketObject;
+        String plateNumberEncoded = Base64.getEncoder()
+                .encodeToString(car.getLicencePlate().getBytes(StandardCharsets.UTF_8));
+        return TicketObject.createTicket(longArgs[0], longArgs[1], plateNumberEncoded);
     }
 
     @Transactional
