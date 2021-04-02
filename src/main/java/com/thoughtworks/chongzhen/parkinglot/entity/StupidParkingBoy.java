@@ -9,9 +9,9 @@ import java.util.List;
 
 @Getter
 @Setter
-public class StupidParkingBoyObject extends ParkingBoyObject {
+public class StupidParkingBoy extends AbstractParkingBoy {
 
-    public StupidParkingBoyObject(long id, boolean isSmart, String name, long previousVisitedLot, List<ParkingLot> parkingLots) {
+    public StupidParkingBoy(long id, boolean isSmart, String name, long previousVisitedLot, List<ParkingLot> parkingLots) {
         this.setId(id);
         this.setSmart(isSmart);
         this.setName(name);

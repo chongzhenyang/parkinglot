@@ -5,8 +5,7 @@ import com.thoughtworks.chongzhen.parkinglot.entity.DO.Car;
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingBoy;
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingLot;
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingManager;
-import com.thoughtworks.chongzhen.parkinglot.entity.ParkingManagerObject;
-import com.thoughtworks.chongzhen.parkinglot.entity.TicketObject;
+import com.thoughtworks.chongzhen.parkinglot.entity.Ticket;
 import com.thoughtworks.chongzhen.parkinglot.repository.*;
 import com.thoughtworks.chongzhen.parkinglot.service.ParkingManagerService;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,17 +28,11 @@ public class ParkingManagerServiceTest {
     private ParkingLotRepository parkingLotRepository;
 
     @Mock
-    private ParkingBoyObjectRepository parkingBoyObjectRepository;
-
-    @Mock
     private ParkingManagerRepository parkingManagerRepository;
-
-    @Mock
-    private ParkingManagerObjectRepository parkingManagerObjectRepository;
 
     @BeforeEach
     void setUp() {
-        parkingManagerService = new ParkingManagerService(parkingLotRepository, parkingManagerRepository, parkingManagerObjectRepository);
+        parkingManagerService = new ParkingManagerService(parkingLotRepository, parkingManagerRepository);
     }
 
     @Test
@@ -122,19 +115,13 @@ public class ParkingManagerServiceTest {
     public void should_park_car_successful_given_parked_by_parking_manager(){
         Car car = CarBuilder.withDefault().withId(20).withBrand("BENZ").withModel("E63s").withLicencePlate("川AP9SA2").build();
         ParkingManager parkingManager = ParkingManagerBuilder.withDefault().build();
-        ParkingManagerObject parkingManagerObject = ParkingManagerObject.builder()
-                .id(parkingManager.getId())
-                .name(parkingManager.getName())
-                .parkingBoys(parkingManager.getParkingBoys())
-                .parkingLots(parkingManager.getParkingLots())
-                .build();
         String plateNumber = Base64.getEncoder().encodeToString(car.getLicencePlate().getBytes(StandardCharsets.UTF_8));
-        TicketObject expectedTicket = TicketObjectBuilder.withDefault()
+        Ticket expectedTicket = TicketObjectBuilder.withDefault()
                 .withBoyId(1L).withLotId(5).withTicketNumber(plateNumber).isParkedByManager(true).build();
 
-        when(parkingManagerObjectRepository.findParkingManagerObjectById(1L)).thenReturn(parkingManagerObject);
+        when(parkingManagerRepository.findById(1L)).thenReturn(Optional.of(parkingManager));
 
-        TicketObject foundTicket = parkingManagerService.park(car,1L);
+        Ticket foundTicket = parkingManagerService.park(car,1L);
         assertThat(foundTicket).isEqualTo(expectedTicket);
     }
 
@@ -142,18 +129,12 @@ public class ParkingManagerServiceTest {
     public void should_pickup_car_successful_given_picked_up_by_manager(){
         Car car = CarBuilder.withDefault().build();
         ParkingManager parkingManager = ParkingManagerBuilder.withDefault().build();
-        ParkingManagerObject parkingManagerObject = ParkingManagerObject.builder()
-                .id(parkingManager.getId())
-                .name(parkingManager.getName())
-                .parkingBoys(parkingManager.getParkingBoys())
-                .parkingLots(parkingManager.getParkingLots())
-                .build();
         String plateNumber = Base64.getEncoder().encodeToString("川A5S11A".getBytes(StandardCharsets.UTF_8));
-        TicketObject ticketObject = TicketObjectBuilder.withDefault()
+        Ticket ticket = TicketObjectBuilder.withDefault()
                 .withBoyId(1L).withLotId(5).withTicketNumber(plateNumber).isParkedByManager(true).build();
-        when(parkingManagerObjectRepository.findParkingManagerObjectById(1L)).thenReturn(parkingManagerObject);
+        when(parkingManagerRepository.findById(1L)).thenReturn(Optional.of(parkingManager));
 
-        Car foundCar = parkingManagerService.pickUp(ticketObject);
+        Car foundCar = parkingManagerService.pickUp(ticket);
         assertThat(foundCar).isEqualTo(car);
     }
 }

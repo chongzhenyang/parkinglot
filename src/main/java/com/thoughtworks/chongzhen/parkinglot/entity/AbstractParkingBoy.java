@@ -12,7 +12,7 @@ import java.util.List;
 
 @Setter
 @Getter
-public abstract class ParkingBoyObject {
+public abstract class AbstractParkingBoy {
 
     private long id;
 
@@ -38,13 +38,13 @@ public abstract class ParkingBoyObject {
         return new long[]{this.getId(), lotId};
     }
 
-    public Car pickUp(TicketObject ticketObject) {
-        long lotId = ticketObject.getParkingLotId();
-        String licencePlate = new String(Base64.getDecoder().decode(ticketObject.getTicketNumber()));
+    public Car pickUp(Ticket ticket) {
+        long lotId = ticket.getParkingLotId();
+        String licencePlate = new String(Base64.getDecoder().decode(ticket.getTicketNumber()));
         ParkingLot selectParkingLot = this.getParkingLots().stream()
                 .filter(parkingLot -> parkingLot.getId() == lotId)
                 .findAny().orElseThrow(() -> {
-                    throw new NoParkingLotException(404, "invalid ticket", "cannot find parking lot with id" + ticketObject.getParkingLotId());
+                    throw new NoParkingLotException(404, "invalid ticket", "cannot find parking lot with id" + ticket.getParkingLotId());
                 });
 
         Car foundCar = selectParkingLot.getCars().stream()
@@ -59,16 +59,16 @@ public abstract class ParkingBoyObject {
         return foundCar;
     }
 
-    protected boolean roundRobin(ParkingLot parkingLot, StupidParkingBoyObject stupidParkingBoy) {
+    protected boolean roundRobin(ParkingLot parkingLot, StupidParkingBoy stupidParkingBoy) {
         if (isFirstLotGivenPreviousIsLastLot(parkingLot, stupidParkingBoy)) {
             return true;
         }
         return parkingLot.getLotsRemain() > 0 && parkingLot.getId() != stupidParkingBoy.getPreviousVisitedLot();
     }
 
-    protected boolean isFirstLotGivenPreviousIsLastLot(ParkingLot parkingLot, StupidParkingBoyObject stupidParkingBoy) {
+    protected boolean isFirstLotGivenPreviousIsLastLot(ParkingLot parkingLot, StupidParkingBoy stupidParkingBoy) {
         long firstId = stupidParkingBoy.getParkingLots().stream().findFirst().orElseThrow(() -> {
-            throw new NoParkingLotException(404, "no parking lot found", "sa");
+            throw new NoParkingLotException(404, "no parking lot found", "empty parking lot list");
         }).getId();
 
         long lastId = firstId + stupidParkingBoy.getParkingLots().size();

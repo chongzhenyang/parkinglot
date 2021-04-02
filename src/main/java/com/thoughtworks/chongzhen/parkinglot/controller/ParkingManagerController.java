@@ -1,10 +1,10 @@
-package com.thoughtworks.chongzhen.parkinglot.api;
+package com.thoughtworks.chongzhen.parkinglot.controller;
 
 import com.thoughtworks.chongzhen.parkinglot.Jwt.JwtTokenUtil;
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.Car;
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingBoy;
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingManager;
-import com.thoughtworks.chongzhen.parkinglot.entity.TicketObject;
+import com.thoughtworks.chongzhen.parkinglot.entity.Ticket;
 import com.thoughtworks.chongzhen.parkinglot.exceptionHanding.exceptions.InvalidTicketException;
 import com.thoughtworks.chongzhen.parkinglot.service.ParkingManagerService;
 import lombok.AllArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/parkingManagers")
 @AllArgsConstructor
-public class ParkingManagerApi {
+public class ParkingManagerController {
     private final ParkingManagerService parkingManagerService;
     private final JwtTokenUtil jwtTokenUtil;
 
@@ -58,17 +58,17 @@ public class ParkingManagerApi {
 
     @PostMapping("/{id}/park")
     @ResponseStatus(HttpStatus.OK)
-    public TicketObject park(@PathVariable("id") long id, @RequestBody Car car) {
+    public Ticket park(@PathVariable("id") long id, @RequestBody Car car) {
         return parkingManagerService.park(car, id);
     }
 
     @PostMapping("/pickUp")
     @ResponseStatus(HttpStatus.OK)
-    public Car pickUp(@RequestBody TicketObject ticketObject) {
-        if (!ticketObject.isParkedByManager()) {
+    public Car pickUp(@RequestBody Ticket ticket) {
+        if (!ticket.isParkedByManager()) {
             throw new InvalidTicketException(400, "invalid ticket", "car was parked by parking boy");
         }
-        return parkingManagerService.pickUp(ticketObject);
+        return parkingManagerService.pickUp(ticket);
     }
 
     @GetMapping

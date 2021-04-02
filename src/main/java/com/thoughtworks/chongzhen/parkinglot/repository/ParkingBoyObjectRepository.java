@@ -11,27 +11,27 @@ import org.springframework.stereotype.Repository;
 public class ParkingBoyObjectRepository {
     private final ParkingBoyRepository parkingBoyRepository;
 
-    public ParkingBoyObject findRandomParkingBoyObject() {
+    public AbstractParkingBoy findRandomParkingBoyObject() {
 
         ParkingBoy parkingBoy = parkingBoyRepository.findRandomParkingBoy();
 
         return ParkingBoyFactory.getParkingBoy(parkingBoy);
     }
 
-    public ParkingBoyObject findParkingBoyObjectByTicket(TicketObject ticketObject) {
-        ParkingBoy parkingBoy = parkingBoyRepository.findById(ticketObject.getParkingBoyId())
-                .orElseThrow(() -> new ParkingBoyNotFoundException(404, "invalid id", "cannot find parking boy with id " + ticketObject.getParkingBoyId()));
+    public AbstractParkingBoy findParkingBoyObjectByTicket(Ticket ticket) {
+        ParkingBoy parkingBoy = parkingBoyRepository.findById(ticket.getParkingBoyId())
+                .orElseThrow(() -> new ParkingBoyNotFoundException(404, "invalid id", "cannot find parking boy with id " + ticket.getParkingBoyId()));
 
         return ParkingBoyFactory.getParkingBoy(parkingBoy);
     }
 
-    public ParkingBoy save(ParkingBoyObject parkingBoyObject) {
+    public ParkingBoy save(AbstractParkingBoy abstractParkingBoy) {
         ParkingBoy parkingBoy = ParkingBoy.builder()
-                .id(parkingBoyObject.getId())
-                .isSmart(parkingBoyObject.isSmart())
-                .name(parkingBoyObject.getName())
-                .previousVisitedLot(parkingBoyObject.getPreviousVisitedLot())
-                .parkingLots(parkingBoyObject.getParkingLots())
+                .id(abstractParkingBoy.getId())
+                .isSmart(abstractParkingBoy.isSmart())
+                .name(abstractParkingBoy.getName())
+                .previousVisitedLot(abstractParkingBoy.getPreviousVisitedLot())
+                .parkingLots(abstractParkingBoy.getParkingLots())
                 .build();
 
         return parkingBoyRepository.save(parkingBoy);

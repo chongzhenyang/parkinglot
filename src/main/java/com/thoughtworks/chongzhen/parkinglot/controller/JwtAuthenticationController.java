@@ -1,4 +1,4 @@
-package com.thoughtworks.chongzhen.parkinglot.api;
+package com.thoughtworks.chongzhen.parkinglot.controller;
 
 import com.thoughtworks.chongzhen.parkinglot.entity.DTO.JwtRequest;
 import com.thoughtworks.chongzhen.parkinglot.entity.DTO.JwtResponse;

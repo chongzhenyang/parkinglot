@@ -1,26 +1,19 @@
 package com.thoughtworks.chongzhen.parkinglot;
 
-import EntityBuilder.ParkingBoyBuilder;
-import com.thoughtworks.chongzhen.parkinglot.api.ParkingManagerApi;
-import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingBoy;
+import com.thoughtworks.chongzhen.parkinglot.controller.ParkingManagerController;
 import com.thoughtworks.chongzhen.parkinglot.service.ParkingBoyService;
 import com.thoughtworks.chongzhen.parkinglot.service.ParkingManagerService;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ParkingManagerApi.class)
+@WebMvcTest(ParkingManagerController.class)
 public class ParkingManagerApiTest {
     @MockBean
     private ParkingBoyService parkingBoyService;

@@ -5,9 +5,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ParkingBoyFactory {
-    public static ParkingBoyObject getParkingBoy(ParkingBoy parkingBoy) {
+    public static AbstractParkingBoy getParkingBoy(ParkingBoy parkingBoy) {
         return parkingBoy.isSmart() ?
-                new SmartParkingBoyObject(parkingBoy.getId(), parkingBoy.isSmart(), parkingBoy.getName(), parkingBoy.getPreviousVisitedLot(), parkingBoy.getParkingLots()) :
-                new StupidParkingBoyObject(parkingBoy.getId(), parkingBoy.isSmart(), parkingBoy.getName(), parkingBoy.getPreviousVisitedLot(), parkingBoy.getParkingLots());
+                new SmartParkingBoy(parkingBoy.getId(), parkingBoy.isSmart(), parkingBoy.getName(), parkingBoy.getPreviousVisitedLot(), parkingBoy.getParkingLots()) :
+                new StupidParkingBoy(parkingBoy.getId(), parkingBoy.isSmart(), parkingBoy.getName(), parkingBoy.getPreviousVisitedLot(), parkingBoy.getParkingLots());
     }
 }

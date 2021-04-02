@@ -1,7 +1,7 @@
 package com.thoughtworks.chongzhen.parkinglot;
 
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.Car;
-import com.thoughtworks.chongzhen.parkinglot.entity.TicketObject;
+import com.thoughtworks.chongzhen.parkinglot.entity.Ticket;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest(classes = ParkingLotApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class ParkingBoyApiTest {
+public class ParkingBoyControllerTest {
     @LocalServerPort
     private int port;
 
@@ -48,15 +48,15 @@ public class ParkingBoyApiTest {
                 .build();
         String plateEncoded = Base64.getEncoder().encodeToString(car.getLicencePlate().getBytes(StandardCharsets.UTF_8));
 
-        ResponseEntity<TicketObject> parkResponse = restTemplate
-                .postForEntity("http://localhost:" + port + "/parkingBoys/park", car, TicketObject.class);
+        ResponseEntity<Ticket> parkResponse = restTemplate
+                .postForEntity("http://localhost:" + port + "/parkingBoys/park", car, Ticket.class);
         assertEquals(HttpStatus.OK, parkResponse.getStatusCode());
         assertEquals(plateEncoded, parkResponse.getBody().getTicketNumber());
 
 
-        TicketObject ticketObject = parkResponse.getBody();
+        Ticket ticket = parkResponse.getBody();
         ResponseEntity<Car> pickUpResponse = restTemplate
-                .postForEntity("http://localhost:" + port + "/parkingBoys/pickUp", ticketObject, Car.class);
+                .postForEntity("http://localhost:" + port + "/parkingBoys/pickUp", ticket, Car.class);
         Car foundCar = pickUpResponse.getBody();
         assertEquals(HttpStatus.OK, pickUpResponse.getStatusCode());
         assertEquals("BENZ", foundCar.getBrand());

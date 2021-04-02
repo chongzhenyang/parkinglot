@@ -11,9 +11,9 @@ import java.util.List;
 
 @Getter
 @Setter
-public class SmartParkingBoyObject extends ParkingBoyObject {
+public class SmartParkingBoy extends AbstractParkingBoy {
 
-    public SmartParkingBoyObject(long id, boolean isSmart, String name, long previousVisitedLot, List<ParkingLot> parkingLots) {
+    public SmartParkingBoy(long id, boolean isSmart, String name, long previousVisitedLot, List<ParkingLot> parkingLots) {
         this.setId(id);
         this.setSmart(isSmart);
         this.setName(name);

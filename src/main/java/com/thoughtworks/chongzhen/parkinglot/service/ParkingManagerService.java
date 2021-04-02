@@ -1,12 +1,10 @@
 package com.thoughtworks.chongzhen.parkinglot.service;
 
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.*;
-import com.thoughtworks.chongzhen.parkinglot.entity.ParkingManagerObject;
-import com.thoughtworks.chongzhen.parkinglot.entity.TicketObject;
+import com.thoughtworks.chongzhen.parkinglot.entity.Ticket;
 import com.thoughtworks.chongzhen.parkinglot.exceptionHanding.exceptions.ParkingBoyNotFoundException;
 import com.thoughtworks.chongzhen.parkinglot.exceptionHanding.exceptions.ParkingManagerNotFoundException;
 import com.thoughtworks.chongzhen.parkinglot.repository.ParkingLotRepository;
-import com.thoughtworks.chongzhen.parkinglot.repository.ParkingManagerObjectRepository;
 import com.thoughtworks.chongzhen.parkinglot.repository.ParkingManagerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +17,6 @@ import java.util.stream.Collectors;
 public class ParkingManagerService {
     private final ParkingLotRepository parkingLotRepository;
     private final ParkingManagerRepository parkingManagerRepository;
-    private final ParkingManagerObjectRepository parkingManagerObjectRepository;
 
     public List<ParkingManager> getAll() {
         return parkingManagerRepository.findAll();
@@ -70,17 +67,21 @@ public class ParkingManagerService {
         return parkingManagerRepository.save(parkingManager);
     }
 
-    public TicketObject park(Car car, long managerId) {
-        ParkingManagerObject parkingManagerObject = parkingManagerObjectRepository.findParkingManagerObjectById(managerId);
-        TicketObject ticketObject = parkingManagerObject.park(car);
-        parkingManagerObjectRepository.save(parkingManagerObject);
-        return ticketObject;
+    public Ticket park(Car car, long managerId) {
+        ParkingManager parkingManager = parkingManagerRepository.findById(managerId).orElseThrow(() -> {
+                    throw new ParkingManagerNotFoundException(404, "invalid id", "cannot find parking manager with id" + managerId);
+                });
+        Ticket ticket = parkingManager.park(car);
+        parkingManagerRepository.save(parkingManager);
+        return ticket;
     }
 
-    public Car pickUp(TicketObject ticketObject) {
-        ParkingManagerObject parkingManagerObject = parkingManagerObjectRepository.findParkingManagerObjectById(ticketObject.getParkingBoyId());
-        Car foundCar = parkingManagerObject.pickUp(ticketObject);
-        parkingManagerObjectRepository.save(parkingManagerObject);
+    public Car pickUp(Ticket ticket) {
+        ParkingManager parkingManager = parkingManagerRepository.findById(ticket.getParkingBoyId()).orElseThrow(() -> {
+            throw new ParkingManagerNotFoundException(404, "invalid id", "cannot find parking manager with id" + ticket.getParkingBoyId());
+        });
+        Car foundCar = parkingManager.pickUp(ticket);
+        parkingManagerRepository.save(parkingManager);
 
         return foundCar;
     }

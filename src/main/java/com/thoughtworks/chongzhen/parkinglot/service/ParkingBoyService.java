@@ -1,8 +1,8 @@
 package com.thoughtworks.chongzhen.parkinglot.service;
 
-import com.thoughtworks.chongzhen.parkinglot.entity.ParkingBoyObject;
+import com.thoughtworks.chongzhen.parkinglot.entity.AbstractParkingBoy;
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.Car;
-import com.thoughtworks.chongzhen.parkinglot.entity.TicketObject;
+import com.thoughtworks.chongzhen.parkinglot.entity.Ticket;
 import com.thoughtworks.chongzhen.parkinglot.repository.CarRepository;
 import com.thoughtworks.chongzhen.parkinglot.repository.ParkingBoyObjectRepository;
 import lombok.AllArgsConstructor;
@@ -21,21 +21,21 @@ public class ParkingBoyService {
     private final ParkingBoyObjectRepository parkingBoyObjectRepository;
 
     @Transactional
-    public TicketObject parkCar(Car car) {
-        ParkingBoyObject parkingBoyObject = parkingBoyObjectRepository.findRandomParkingBoyObject();
-        long[] longArgs = parkingBoyObject.park(car);
-        parkingBoyObjectRepository.save(parkingBoyObject);
+    public Ticket parkCar(Car car) {
+        AbstractParkingBoy abstractParkingBoy = parkingBoyObjectRepository.findRandomParkingBoyObject();
+        long[] longArgs = abstractParkingBoy.park(car);
+        parkingBoyObjectRepository.save(abstractParkingBoy);
 
         String plateNumberEncoded = Base64.getEncoder()
                 .encodeToString(car.getLicencePlate().getBytes(StandardCharsets.UTF_8));
-        return TicketObject.createTicket(longArgs[0], longArgs[1], plateNumberEncoded);
+        return Ticket.createTicket(longArgs[0], longArgs[1], plateNumberEncoded);
     }
 
     @Transactional
-    public Car pickUp(TicketObject ticketObject) {
-        ParkingBoyObject parkingBoyObject = parkingBoyObjectRepository.findParkingBoyObjectByTicket(ticketObject);
-        Car car = parkingBoyObject.pickUp(ticketObject);
-        parkingBoyObjectRepository.save(parkingBoyObject);
+    public Car pickUp(Ticket ticket) {
+        AbstractParkingBoy abstractParkingBoy = parkingBoyObjectRepository.findParkingBoyObjectByTicket(ticket);
+        Car car = abstractParkingBoy.pickUp(ticket);
+        parkingBoyObjectRepository.save(abstractParkingBoy);
         carRepository.delete(car);
         return car;
     }

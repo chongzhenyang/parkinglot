@@ -5,14 +5,14 @@ import lombok.Data;
 
 @Data
 @Builder
-public class TicketObject {
+public class Ticket {
     private long parkingBoyId;
     private long parkingLotId;
     private String ticketNumber;
     private boolean isParkedByManager;
 
-    public static TicketObject createTicket(long parkingBoyId, long parkingLotId, String ticketNumber){
-        return TicketObject.builder()
+    public static Ticket createTicket(long parkingBoyId, long parkingLotId, String ticketNumber){
+        return Ticket.builder()
                 .parkingBoyId(parkingBoyId)
                 .parkingLotId(parkingLotId)
                 .ticketNumber(ticketNumber)

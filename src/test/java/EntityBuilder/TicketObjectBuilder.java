@@ -1,6 +1,6 @@
 package EntityBuilder;
 
-import com.thoughtworks.chongzhen.parkinglot.entity.TicketObject;
+import com.thoughtworks.chongzhen.parkinglot.entity.Ticket;
 import lombok.AllArgsConstructor;
 
 
@@ -35,8 +35,8 @@ public class TicketObjectBuilder {
         return this;
     }
 
-    public TicketObject build() {
-        return TicketObject.builder()
+    public Ticket build() {
+        return Ticket.builder()
                 .parkingBoyId(parkingBoyId)
                 .parkingLotId(parkingLotId)
                 .ticketNumber(ticketNumber)

@@ -7,8 +7,8 @@ import com.thoughtworks.chongzhen.parkinglot.entity.DO.Car;
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingBoy;
 import com.thoughtworks.chongzhen.parkinglot.entity.DO.ParkingLot;
 import com.thoughtworks.chongzhen.parkinglot.entity.ParkingBoyFactory;
-import com.thoughtworks.chongzhen.parkinglot.entity.ParkingBoyObject;
-import com.thoughtworks.chongzhen.parkinglot.entity.TicketObject;
+import com.thoughtworks.chongzhen.parkinglot.entity.AbstractParkingBoy;
+import com.thoughtworks.chongzhen.parkinglot.entity.Ticket;
 import com.thoughtworks.chongzhen.parkinglot.exceptionHanding.exceptions.CarNotFoundException;
 import com.thoughtworks.chongzhen.parkinglot.exceptionHanding.exceptions.NoParkingLotException;
 import com.thoughtworks.chongzhen.parkinglot.repository.CarRepository;
@@ -48,18 +48,18 @@ public class ParkingBoyServiceTest {
         ParkingBoy parkingBoy = ParkingBoyBuilder.withDefault().withPreviousVisitedLot(1).build();
         Car car = CarBuilder.withDefault().build();
         String plate = Base64.getEncoder().encodeToString(car.getLicencePlate().getBytes(StandardCharsets.UTF_8));
-        ParkingBoyObject parkingBoyObject = ParkingBoyFactory.getParkingBoy(parkingBoy);
-        TicketObject expectTicket = TicketObjectBuilder.withDefault()
+        AbstractParkingBoy abstractParkingBoy = ParkingBoyFactory.getParkingBoy(parkingBoy);
+        Ticket expectTicket = TicketObjectBuilder.withDefault()
                 .withBoyId(4)
                 .withLotId(parkingBoy.getParkingLots().get(0).getId())
                 .withTicketNumber(plate)
                 .isParkedByManager(false)
                 .build();
 
-        when(parkingBoyObjectRepository.findRandomParkingBoyObject()).thenReturn(parkingBoyObject);
-        when(parkingBoyObjectRepository.save(parkingBoyObject)).thenReturn(parkingBoy);
+        when(parkingBoyObjectRepository.findRandomParkingBoyObject()).thenReturn(abstractParkingBoy);
+        when(parkingBoyObjectRepository.save(abstractParkingBoy)).thenReturn(parkingBoy);
 
-        TicketObject foundTicket = parkingBoyService.parkCar(car);
+        Ticket foundTicket = parkingBoyService.parkCar(car);
         assertThat(foundTicket).isEqualTo(expectTicket);
     }
 
@@ -68,9 +68,9 @@ public class ParkingBoyServiceTest {
         ParkingBoy parkingBoy = ParkingBoyBuilder.withDefault().withPreviousVisitedLot(1).build();
         parkingBoy.getParkingLots().get(0).setLotsRemain(0);
         Car car = CarBuilder.withDefault().build();
-        ParkingBoyObject parkingBoyObject = ParkingBoyFactory.getParkingBoy(parkingBoy);
+        AbstractParkingBoy abstractParkingBoy = ParkingBoyFactory.getParkingBoy(parkingBoy);
 
-        when(parkingBoyObjectRepository.findRandomParkingBoyObject()).thenReturn(parkingBoyObject);
+        when(parkingBoyObjectRepository.findRandomParkingBoyObject()).thenReturn(abstractParkingBoy);
         assertThrows(NoParkingLotException.class, ()->parkingBoyService.parkCar(car));
     }
 
@@ -79,9 +79,9 @@ public class ParkingBoyServiceTest {
         ParkingBoy parkingBoy = ParkingBoyBuilder.withDefault().withPreviousVisitedLot(1).build();
         Car car = CarBuilder.withDefault().build();
         parkingBoy.setParkingLots(new ArrayList<ParkingLot>());
-        ParkingBoyObject parkingBoyObject = ParkingBoyFactory.getParkingBoy(parkingBoy);
+        AbstractParkingBoy abstractParkingBoy = ParkingBoyFactory.getParkingBoy(parkingBoy);
 
-        when(parkingBoyObjectRepository.findRandomParkingBoyObject()).thenReturn(parkingBoyObject);
+        when(parkingBoyObjectRepository.findRandomParkingBoyObject()).thenReturn(abstractParkingBoy);
         assertThrows(NoParkingLotException.class, ()->parkingBoyService.parkCar(car));
     }
 
@@ -89,12 +89,12 @@ public class ParkingBoyServiceTest {
     public void should_pick_up_car_successful(){
         Car car = CarBuilder.withDefault().build();
         String plate = Base64.getEncoder().encodeToString(car.getLicencePlate().getBytes(StandardCharsets.UTF_8));
-        TicketObject ticket = TicketObjectBuilder.withDefault().withBoyId(4).withLotId(5).isParkedByManager(false).withTicketNumber(plate).build();
+        Ticket ticket = TicketObjectBuilder.withDefault().withBoyId(4).withLotId(5).isParkedByManager(false).withTicketNumber(plate).build();
         ParkingBoy parkingBoy = ParkingBoyBuilder.withDefault().withPreviousVisitedLot(1).build();
-        ParkingBoyObject parkingBoyObject = ParkingBoyFactory.getParkingBoy(parkingBoy);
+        AbstractParkingBoy abstractParkingBoy = ParkingBoyFactory.getParkingBoy(parkingBoy);
 
-        when(parkingBoyObjectRepository.findParkingBoyObjectByTicket(ticket)).thenReturn(parkingBoyObject);
-        when(parkingBoyObjectRepository.save(parkingBoyObject)).thenReturn(parkingBoy);
+        when(parkingBoyObjectRepository.findParkingBoyObjectByTicket(ticket)).thenReturn(abstractParkingBoy);
+        when(parkingBoyObjectRepository.save(abstractParkingBoy)).thenReturn(parkingBoy);
 
         Car foundCar = parkingBoyService.pickUp(ticket);
         assertThat(foundCar).isEqualTo(car);
@@ -104,11 +104,11 @@ public class ParkingBoyServiceTest {
     public void should_throw_exception_when_pick_up_given_invalid_ticket_lot_number(){
         Car car = CarBuilder.withDefault().build();
         String plate = Base64.getEncoder().encodeToString(car.getLicencePlate().getBytes(StandardCharsets.UTF_8));
-        TicketObject ticket = TicketObjectBuilder.withDefault().withBoyId(4).withLotId(6).isParkedByManager(false).withTicketNumber(plate).build();
+        Ticket ticket = TicketObjectBuilder.withDefault().withBoyId(4).withLotId(6).isParkedByManager(false).withTicketNumber(plate).build();
         ParkingBoy parkingBoy = ParkingBoyBuilder.withDefault().withPreviousVisitedLot(1).build();
-        ParkingBoyObject parkingBoyObject = ParkingBoyFactory.getParkingBoy(parkingBoy);
+        AbstractParkingBoy abstractParkingBoy = ParkingBoyFactory.getParkingBoy(parkingBoy);
 
-        when(parkingBoyObjectRepository.findParkingBoyObjectByTicket(ticket)).thenReturn(parkingBoyObject);
+        when(parkingBoyObjectRepository.findParkingBoyObjectByTicket(ticket)).thenReturn(abstractParkingBoy);
 
         assertThrows(NoParkingLotException.class, ()->parkingBoyService.pickUp(ticket));
     }
@@ -117,11 +117,11 @@ public class ParkingBoyServiceTest {
     public void should_throw_exception_when_pick_up_given_invalid_ticket_number(){
         Car car = CarBuilder.withDefault().build();
         String plate = Base64.getEncoder().encodeToString(car.getLicencePlate().getBytes(StandardCharsets.UTF_8));
-        TicketObject ticket = TicketObjectBuilder.withDefault().withBoyId(4).withLotId(5).isParkedByManager(false).withTicketNumber("123asd").build();
+        Ticket ticket = TicketObjectBuilder.withDefault().withBoyId(4).withLotId(5).isParkedByManager(false).withTicketNumber("123asd").build();
         ParkingBoy parkingBoy = ParkingBoyBuilder.withDefault().withPreviousVisitedLot(1).build();
-        ParkingBoyObject parkingBoyObject = ParkingBoyFactory.getParkingBoy(parkingBoy);
+        AbstractParkingBoy abstractParkingBoy = ParkingBoyFactory.getParkingBoy(parkingBoy);
 
-        when(parkingBoyObjectRepository.findParkingBoyObjectByTicket(ticket)).thenReturn(parkingBoyObject);
+        when(parkingBoyObjectRepository.findParkingBoyObjectByTicket(ticket)).thenReturn(abstractParkingBoy);
 
         assertThrows(CarNotFoundException.class, ()->parkingBoyService.pickUp(ticket));
     }
