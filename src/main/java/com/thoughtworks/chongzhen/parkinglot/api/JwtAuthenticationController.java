@@ -6,7 +6,6 @@ import com.thoughtworks.chongzhen.parkinglot.Jwt.JwtTokenUtil;
 import com.thoughtworks.chongzhen.parkinglot.Jwt.JwtUserDetailsService;
 import com.thoughtworks.chongzhen.parkinglot.exceptionHanding.exceptions.InvalidUsernameAndPasswordException;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
