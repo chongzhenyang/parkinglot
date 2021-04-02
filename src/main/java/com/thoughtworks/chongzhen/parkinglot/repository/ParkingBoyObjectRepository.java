@@ -11,42 +11,28 @@ import org.springframework.stereotype.Repository;
 public class ParkingBoyObjectRepository {
     private final ParkingBoyRepository parkingBoyRepository;
 
-    private final ParkingBoyFactory parkingBoyFactory;
-
-
     public ParkingBoyObject findRandomParkingBoyObject() {
 
         ParkingBoy parkingBoy = parkingBoyRepository.findRandomParkingBoy();
 
-        return parkingBoyFactory.getParkingBoy(parkingBoy);
+        return ParkingBoyFactory.getParkingBoy(parkingBoy);
     }
 
     public ParkingBoyObject findParkingBoyObjectByTicket(TicketObject ticketObject) {
         ParkingBoy parkingBoy = parkingBoyRepository.findById(ticketObject.getParkingBoyId())
                 .orElseThrow(() -> new ParkingBoyNotFoundException(404, "invalid id", "cannot find parking boy with id " + ticketObject.getParkingBoyId()));
 
-        return parkingBoyFactory.getParkingBoy(parkingBoy);
+        return ParkingBoyFactory.getParkingBoy(parkingBoy);
     }
 
     public ParkingBoy save(ParkingBoyObject parkingBoyObject) {
-        ParkingBoy parkingBoy = null;
-        if (parkingBoyObject instanceof SmartParkingBoyObject) {
-            SmartParkingBoyObject smartParkingBoyObject = (SmartParkingBoyObject) parkingBoyObject;
-            parkingBoy = ParkingBoy.builder()
-                    .id(smartParkingBoyObject.getId())
-                    .isSmart(smartParkingBoyObject.isSmart())
-                    .name(smartParkingBoyObject.getName())
-                    .previousVisitedLot(smartParkingBoyObject.getPreviousVisitedLot())
-                    .parkingLots(smartParkingBoyObject.getParkingLots()).build();
-        } else if (parkingBoyObject instanceof StupidParkingBoyObject) {
-            StupidParkingBoyObject stupidParkingBoyObject = (StupidParkingBoyObject) parkingBoyObject;
-            parkingBoy = ParkingBoy.builder()
-                    .id(stupidParkingBoyObject.getId())
-                    .isSmart(stupidParkingBoyObject.isSmart())
-                    .name(stupidParkingBoyObject.getName())
-                    .previousVisitedLot(stupidParkingBoyObject.getPreviousVisitedLot())
-                    .parkingLots(stupidParkingBoyObject.getParkingLots()).build();
-        }
+        ParkingBoy parkingBoy = ParkingBoy.builder()
+                .id(parkingBoyObject.getId())
+                .isSmart(parkingBoyObject.isSmart())
+                .name(parkingBoyObject.getName())
+                .previousVisitedLot(parkingBoyObject.getPreviousVisitedLot())
+                .parkingLots(parkingBoyObject.getParkingLots())
+                .build();
 
         return parkingBoyRepository.save(parkingBoy);
     }
