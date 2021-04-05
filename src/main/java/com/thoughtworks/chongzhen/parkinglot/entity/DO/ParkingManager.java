@@ -3,6 +3,7 @@ package com.thoughtworks.chongzhen.parkinglot.entity.DO;
 import com.thoughtworks.chongzhen.parkinglot.entity.Ticket;
 import com.thoughtworks.chongzhen.parkinglot.exceptionHanding.exceptions.CarNotFoundException;
 import com.thoughtworks.chongzhen.parkinglot.exceptionHanding.exceptions.NoParkingLotException;
+import com.thoughtworks.chongzhen.parkinglot.exceptionHanding.exceptions.ParkingBoyNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Entity
 @Table
@@ -35,6 +37,31 @@ public class ParkingManager {
     @OneToMany(cascade = {CascadeType.ALL})
     @JoinColumn(name = "parkingManager_id")
     List<ParkingLot> parkingLots = new ArrayList<>();
+
+    public void hireParkingBoy(ParkingBoy parkingBoy) {
+        this.getParkingBoys().add(parkingBoy);
+    }
+
+    public void fireParkingBoy(String parkingBoyName) {
+        List<ParkingBoy> updatedParkingBoys = this.getParkingBoys().stream()
+                .filter(parkingBoy -> !validateParkingBoy(parkingBoy, parkingBoyName)).collect(Collectors.toList());
+        this.setParkingBoys(updatedParkingBoys);
+    }
+
+    public void buildParkingLot(long lotCapacity, String boyName, String lotName) {
+        ParkingLot parkingLot = ParkingLot.builder().lotsRemain(lotCapacity).name(lotName).build();
+        saveFindLotsByBoyName(boyName).add(parkingLot);
+        this.getParkingLots().add(parkingLot);
+    }
+    //bug
+    public void destroyParkingLot(String boyName, ParkingLot parkingLot) {
+        this.getParkingBoys().stream().filter(parkingBoy -> parkingBoy.getName().equals(boyName)).findAny()
+                .orElseThrow(() -> {
+                    throw new ParkingBoyNotFoundException(404, "invalid name", "cannot find parking boy with name" + boyName);
+                })
+                .getParkingLots().remove(parkingLot);
+        this.getParkingLots().remove(parkingLot);
+    }
 
     public Ticket park(Car car) {
         int randomIndex = new Random().nextInt(parkingLots.size());
@@ -64,11 +91,27 @@ public class ParkingManager {
         });
 
         Car foundCar = foundParkingLot.getCars().stream().filter(car -> car.getLicencePlate().equals(licencePlate))
-                .findAny().orElseThrow(()->{throw new CarNotFoundException(404, "invalid licence plate", "no such car with plate number " + licencePlate);
+                .findAny().orElseThrow(() -> {
+                    throw new CarNotFoundException(404, "invalid licence plate", "no such car with plate number " + licencePlate);
                 });
 
         foundParkingLot.getCars().remove(foundCar);
         foundParkingLot.setLotsRemain(foundParkingLot.getLotsRemain() + 1);
         return foundCar;
+    }
+
+    private boolean validateParkingBoy(ParkingBoy parkingBoy, String boyName) {
+        boolean isEmpty = parkingBoy.getName().equals(boyName) && parkingBoy.getParkingLots().size() != 0;
+        if (isEmpty) {
+            throw new RuntimeException("cannot delete parking boy when it is not empty");
+        }
+        return parkingBoy.getName().equals(boyName) && parkingBoy.getParkingLots().size() == 0;
+    }
+
+    private List<ParkingLot> saveFindLotsByBoyName(String boyName) {
+        return this.getParkingBoys().stream().filter(parkingBoy -> parkingBoy.getName().equals(boyName)).findAny()
+                .orElseThrow(() -> {
+                    throw new ParkingBoyNotFoundException(404, "invalid name", "cannot find parking boy with name" + boyName);
+                }).getParkingLots();
     }
 }

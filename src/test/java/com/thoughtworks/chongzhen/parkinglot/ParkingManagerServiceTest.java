@@ -19,6 +19,7 @@ import java.util.*;
 
 import static org.mockito.Mockito.when;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 public class ParkingManagerServiceTest {
@@ -72,15 +73,16 @@ public class ParkingManagerServiceTest {
     @Test
     public void should_delete_parking_lot_successful(){
         ParkingManager parkingManager = ParkingManagerBuilder.withDefault().build();
-        Optional<ParkingLot> parkingLot = Optional.of(ParkingLotBuilder.withDefault().build());
+        ParkingLot parkingLot = ParkingLotBuilder.withDefault().withLotsRemain(500).withCar(new ArrayList<Car>()).build();
+
         ParkingBoy parkingBoy = ParkingBoyBuilder.withDefault().withParkingLots(new ArrayList<ParkingLot>()).build();
-        List<ParkingBoy> parkingBoyList = new ArrayList<>();
-        parkingBoyList.add(parkingBoy);
-        ParkingManager expectedParkingManager = ParkingManagerBuilder.withDefault().withParkingBoys(parkingBoyList).withParkingLots(new ArrayList<ParkingLot>()).build();
+        List<ParkingBoy> parkingBoys = new ArrayList<>();
+        parkingBoys.add(parkingBoy);
+        ParkingManager expectedParkingManager = ParkingManagerBuilder.withDefault().withParkingBoys(parkingBoys).withParkingLots(new ArrayList<ParkingLot>()).build();
 
         when(parkingManagerRepository.findById(1L)).thenReturn(Optional.of(parkingManager));
-        when(parkingLotRepository.findParkingLotByName("firstLot")).thenReturn(parkingLot);
-        when(parkingManagerRepository.save(expectedParkingManager)).thenReturn(expectedParkingManager);
+        when(parkingLotRepository.findParkingLotByName("firstLot")).thenReturn(Optional.of(parkingLot));
+        //when(parkingManagerRepository.save(expectedParkingManager)).thenReturn(expectedParkingManager);
 
         ParkingManager foundParkingManager = parkingManagerService.deleteParkingLot(1L, "zuowen", "firstLot");
         assertThat(foundParkingManager).isEqualTo(expectedParkingManager);
@@ -105,10 +107,8 @@ public class ParkingManagerServiceTest {
         ParkingManager parkingManager = ParkingManagerBuilder.withDefault().build();
 
         when(parkingManagerRepository.findById(1L)).thenReturn(Optional.of(parkingManager));
-        when(parkingManagerRepository.save(parkingManager)).thenReturn(parkingManager);
 
-        ParkingManager foundParkingManager = parkingManagerService.deleteParkingBoy(1L, "zuowen");
-        assertThat(foundParkingManager).isEqualTo(parkingManager);
+        assertThrows(RuntimeException.class, ()->parkingManagerService.deleteParkingBoy(1L, "zuowen"));
     }
 
     @Test

@@ -20,12 +20,12 @@ public class JwtAuthenticationController {
     private final JwtUserDetailsService userDetailsService;
 
     @PostMapping
-    public JwtResponse createAuthenticationToken(@RequestBody JwtRequest authenticationRequest){
+    public JwtResponse createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) {
 
         final UserDetails userDetails = userDetailsService
                 .loadUserByUsername(authenticationRequest.getUsername());
 
-        if(!userDetails.getPassword().equals(authenticationRequest.getPassword())){
+        if (!userDetails.getPassword().equals(authenticationRequest.getPassword())) {
             throw new InvalidUsernameAndPasswordException(401, "unauthorized", "incorrect username and password");
         }
 
