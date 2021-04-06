@@ -53,7 +53,7 @@ public class ParkingManager {
         saveFindLotsByBoyName(boyName).add(parkingLot);
         this.getParkingLots().add(parkingLot);
     }
-    //bug
+
     public void destroyParkingLot(String boyName, ParkingLot parkingLot) {
         this.getParkingBoys().stream().filter(parkingBoy -> parkingBoy.getName().equals(boyName)).findAny()
                 .orElseThrow(() -> {

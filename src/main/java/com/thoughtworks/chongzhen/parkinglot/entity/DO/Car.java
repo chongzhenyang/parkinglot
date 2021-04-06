@@ -22,5 +22,6 @@ public class Car {
 
     private String model;
 
+    @Column(name = "licencePlate", nullable = false, unique = true)
     private String licencePlate;
 }

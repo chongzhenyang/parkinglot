@@ -22,6 +22,7 @@ public class ParkingLot {
 
     private long lotsRemain;
 
+    @Column(name = "lotName", nullable = false, unique = true)
     private String name;
 
     @OneToMany(cascade = {CascadeType.ALL})
