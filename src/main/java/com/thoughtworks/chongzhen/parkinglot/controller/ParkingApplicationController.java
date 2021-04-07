@@ -15,12 +15,6 @@ public class ParkingApplicationController {
 
     private final StaffService staffService;
 
-    @GetMapping("/test")
-    public String test() {
-        return "hello";
-    }
-
-
     @PostMapping("/{lotId}/park")
     public Ticket park(@PathVariable("lotId") long id, @RequestBody Car car) {
         return staffService.park(car, id);
